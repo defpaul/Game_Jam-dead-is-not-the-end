@@ -37,8 +37,8 @@ class Walls:
 class Ghost:
     def __init__(self, name, x, y):
         self.name = name
-        self.x = 600
-        self.y = 300
+        self.x = 200
+        self.y = 200
         self.img = pygame.image.load("assets/Gost.png")
         self.img = pygame.transform.scale(self.img, (64, 64)) ### orig 32x32
         self.speed = 2.8
@@ -53,10 +53,13 @@ class Ghost:
         self.y = self.y + self.speed
 
 class JohnDoe:
-    def __init__(self, name, x, y):
+    def __init__(self, walls,  name, x, y):
+        self.walls = walls
         self.name = name
         self.x = 100
         self.y = 100
+        self.prex = 100
+        self.prey = 100
         self.img = pygame.image.load("assets/john_doe.png")
         self.img = pygame.transform.scale(self.img, (64, 64))  ### orig 32x32
         self.speed = 2.2
@@ -64,35 +67,88 @@ class JohnDoe:
         self.minFearDistance = 100
         self.minPanikDistance = 60
 
+    def proofWallCollision(self, colx, coly):
+        wallXLimit = 80
+        colx = int(colx)
+        retVal = 0
+        i = 0
+        imax = 100
+        while i < imax:
+            wallX = int(self.walls.obstacles[i].start.x)
+            minWallX = int(wallX - wallXLimit)
+            maxWallX = int(wallX + wallXLimit)
+
+            if colx > minWallX and colx < maxWallX:
+                retVal = 1
+
+            i = i + 1
+
+        print(i)
+        return retVal;
+
+    """
+            if maxWallX != 10:                
+                if colx > minWallX:
+                    A = 1
+                if colx < maxWallX:
+                    B = 1
+
+            if A and B:
+                print("----------------: ", colx, minWallX, maxWallX)
+                retVal = 1
+                break
+    """
+           # i = i + 1
+
+       # return retVal;
+
+
     def geheZuPos(self, inx, iny):
         distanz = math.sqrt(((inx-self.x)*(inx-self.x)) + ((iny-self.y)*(iny-self.y)))
         if distanz < self.minDistance:
             if distanz > self.minFearDistance:
                 if inx > self.x:
-                    self.x = self.x + self.speed
+                    self.prex = self.prex + self.speed
+                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                        self.x = self.x + self.speed
                 else:
-                    self.x = self.x - self.speed
+                    self.prex = self.prex - self.speed
+                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                        self.x = self.x - self.speed
 
                 if iny > self.y:
-                    self.y = self.y + self.speed
+                    self.prey = self.prey + self.speed
+                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                        self.y = self.y + self.speed
                 else:
-                    self.y = self.y - self.speed
+                    self.prey = self.prey - self.speed
+                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                        self.y = self.y - self.speed
 
             if distanz < self.minFearDistance:
                 if inx > self.x:
-                    self.x = self.x - self.speed
+                    self.prex = self.prex - self.speed
+                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                        self.x = self.x - self.speed
                 else:
-                    self.x = self.x + self.speed
+                    self.prex = self.prex + self.speed
+                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                        self.x = self.x + self.speed
 
                 if iny > self.y:
-                    self.y = self.y - self.speed
+                    self.prey = self.prey - self.speed
+                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                        self.y = self.y - self.speed
                 else:
-                    self.y = self.y + self.speed
+                    self.prey = self.prey + self.speed
+                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                        self.y = self.y + self.speed
 
                 if distanz < self.minPanikDistance:
+                    self.prex = 100
+                    self.prey = 100
                     self.x = 100
                     self.y = 100
-
 
 def restartGame():
     Level = 1
@@ -102,26 +158,40 @@ def restartGame():
 def createLevelWalls(johnDoO):
     i = 0
     offsetX = 200
-    offsetY = 200
+    offsetY = 100
     doorSpace = 80
-    randomY = random.random() * 600;
+    rangeYrandom = 200
+    randomY = random.random() * rangeYrandom;
 
     x = 0
     xmax = 16
     while x < xmax:
         if offsetX < 1500:
-            randomY = random.random() * 600;
+            randomY = random.random() * rangeYrandom;
             johnDoO.obstacles[i].start.x = offsetX
             johnDoO.obstacles[i].start.y = 0
             johnDoO.obstacles[i].end.x = offsetX
             johnDoO.obstacles[i].end.y = offsetY + randomY
             i = i + 1
 
+            startNewLine = johnDoO.obstacles[i-1].end.y + doorSpace
+            if startNewLine < 800:
+                johnDoO.obstacles[i].start.x = offsetX
+                johnDoO.obstacles[i].start.y = startNewLine
+                johnDoO.obstacles[i].end.x = offsetX
+                randomY = random.random() * rangeYrandom;
+                johnDoO.obstacles[i].end.y = startNewLine + randomY + 40
+                i = i + 1
 
-            johnDoO.obstacles[i].start.x = offsetX
-            johnDoO.obstacles[i].start.y = johnDoO.obstacles[i-1].end.y + doorSpace
-            johnDoO.obstacles[i].end.x = offsetX
-            johnDoO.obstacles[i].end.y = 900
+                johnDoO.obstacles[i].start.x = offsetX
+                johnDoO.obstacles[i].start.y = johnDoO.obstacles[i-1].end.y + doorSpace
+                johnDoO.obstacles[i].end.x = offsetX
+                johnDoO.obstacles[i].end.y = 900
+            else:
+                johnDoO.obstacles[i].start.x = offsetX
+                johnDoO.obstacles[i].start.y = startNewLine
+                johnDoO.obstacles[i].end.x = offsetX
+                johnDoO.obstacles[i].end.y = 900
             i = i + 1
 
             randomX = random.random() * 180;
@@ -137,8 +207,6 @@ def drawLevelWalls(screen, johnDoO):
 
 def main():
     pygame.init()
-    ghostInGame = Ghost("TheGhost",100,100)
-    johnDoeInGame = JohnDoe("JohnDoe", 100, 100)
 
     screenSize_x = 1600
     screenSize_y = 900
@@ -156,6 +224,8 @@ def main():
 
     johnDoO = Walls()
     createLevelWalls(johnDoO)
+    ghostInGame = Ghost("TheGhost",100,100)
+    johnDoeInGame = JohnDoe(johnDoO, "JohnDoe", 100, 100)
 
     running = 1;
     while running:
@@ -183,23 +253,18 @@ def main():
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
 
                 if event.key == pygame.K_LEFT:
-                    print("K_Left")
                     ghostInGame.goLeft()
 
                 if event.key == pygame.K_RIGHT:
-                    print("K_Right")
                     ghostInGame.goRight()
 
                 if event.key == pygame.K_UP:
-                    print("K_Up")
                     ghostInGame.goUp()
 
                 if event.key == pygame.K_DOWN:
-                    print("K_Down")
                     ghostInGame.goDown()
 
                 if event.key == pygame.K_k:
-                    print("klopfKlop")
                     johnDoeInGame.geheZuPos(ghostInGame.x, ghostInGame.y)
 
                 if event.key == pygame.K_e:
