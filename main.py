@@ -13,6 +13,8 @@ import random
 if not pygame.font: print('Fehler pygame.font Modul konnte nicht geladen werden!')
 if not pygame.mixer: print('Fehler pygame.mixer Modul konnte nicht geladen werden!')
 
+global level
+global johnDoeInGame
 
 class Point:
     def __init__(self, x, y):
@@ -63,18 +65,22 @@ class Ghost:
         self.prey = 0
         self.x = 200
         self.y = 200
+        self.cx = 200+32
+        self.cy = 200+32
         self.img = pygame.image.load("assets/Gost.png")
         self.img = pygame.transform.scale(self.img, (64, 64)) ### orig 32x32
         self.speed = 2.8
+        self.distanzeLimit = 60
 
     def proofGhostWalk(self, inx, iny):
         retVal = 0
-        distanzeLimit = 60
+        inx = inx - 32
+        iny = iny - 32
         i = 0
         imax = 10
         while i < imax:
             distanz = math.sqrt(((inx - self.aghost.anti[i].x) * (inx - self.aghost.anti[i].x)) + ((iny - self.aghost.anti[i].y) * (iny - self.aghost.anti[i].y)))
-            if distanz < distanzeLimit:
+            if distanz < self.distanzeLimit:
                 retVal = 1
                 break
             i = i + 1
@@ -183,6 +189,11 @@ class JohnDoe:
                     self.x = 100
                     self.y = 100
 
+    def moving(self):
+        dx = int((random.random() - 0.5) * 1000)
+        dy = int((random.random() - 0.5) * 1000)
+        self.geheZuPos(dx, dy)
+
 
 def createLevelWalls(johnDoO):
     i = 0
@@ -190,7 +201,7 @@ def createLevelWalls(johnDoO):
     offsetY = 100
     doorSpace = 100
     rangeYrandom = 200
-    randomY = random.random() * rangeYrandom;
+    #randomY = 0#random.random() * rangeYrandom;
 
     x = 0
     xmax = 16
@@ -243,7 +254,11 @@ def drawLevelAntiGhosts(screen, aghost):
 
 
 def main():
+    global johnDoeInGame
     pygame.init()
+    global level
+    level = 0
+
     screenSize_x = 1600
     screenSize_y = 900
     screen = pygame.display.set_mode((screenSize_x, screenSize_y))
@@ -265,13 +280,15 @@ def main():
 
     running = 1;
     while running:
-
         clock.tick(30) #30 FPS
-        screen.fill((200, 200, 200)) # screen-Surface mit Schwarz (RGB = 0, 0, 0) füllen.
-        screen.blit(imgBackground, (0, 0))
+        #screen.fill((200, 200, 200)) # screen-Surface mit Schwarz (RGB = 0, 0, 0) füllen.
+        #if level == 0:
+        #if johnDoeInGame.x > 32 and johnDoeInGame.x < 1570 and johnDoeInGame.y > 32 and johnDoeInGame.y < 870:
+        #johnDoeInGame.moving()
 
-        drawLevelWalls(screen, johnDoO)
-        drawLevelAntiGhosts(screen, antighost)
+        if johnDoeInGame.x > 1500:
+            level = level + 1
+            print("level: ", level)
 
         for event in pygame.event.get():
             # Exit with Esc
@@ -308,13 +325,15 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
-            #draw
-            screen.blit(ghostInGame.img, (ghostInGame.x, ghostInGame.y))
-            screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
+        #draw
+        screen.blit(imgBackground, (0, 0))
+        pygame.draw.circle(screen, (200, 200, 255), (ghostInGame.x + 32, ghostInGame.y + 32), 120)
+        drawLevelWalls(screen, johnDoO)
+        drawLevelAntiGhosts(screen, antighost)
+        screen.blit(ghostInGame.img, (ghostInGame.x, ghostInGame.y))
+        screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
 
-        # Inhalt von screen anzeigen.
-            pygame.display.flip()
-
+        pygame.display.flip() # Inhalt von screen anzeigen.
 
 # Überprüfen, ob dieses Modul als Programm läuft und nicht in einem anderen Modul importiert wird.
 
