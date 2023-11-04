@@ -68,7 +68,7 @@ class JohnDoe:
         self.minPanikDistance = 60
 
     def proofWallCollision(self, colx, coly):
-        wallXLimit = 80
+        wallXLimit = 60
         colx = int(colx)
         retVal = 0
         i = 0
@@ -78,8 +78,12 @@ class JohnDoe:
             minWallX = int(wallX - wallXLimit)
             maxWallX = int(wallX + wallXLimit)
 
+            minY = int(self.walls.obstacles[i].start.y)
+            maxY = int(self.walls.obstacles[i].end.y)
+
             if colx > minWallX and colx < maxWallX:
-                retVal = 1
+                if coly > minY and coly < maxY:
+                    retVal = 1
 
             i = i + 1
 
@@ -141,7 +145,7 @@ def createLevelWalls(johnDoO):
     i = 0
     offsetX = 200
     offsetY = 100
-    doorSpace = 80
+    doorSpace = 100
     rangeYrandom = 200
     randomY = random.random() * rangeYrandom;
 
