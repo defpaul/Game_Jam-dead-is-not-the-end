@@ -3,7 +3,7 @@
 # Date: 04-11-2023
 # Author: Jörg Angermayer and Paul
 # Licence: Freeware
-
+import math
 
 # Pygame-Modul importieren.
 import pygame
@@ -39,35 +39,43 @@ class JohnDoe:
         self.img = pygame.image.load("assets/john_doe.png")
         self.img = pygame.transform.scale(self.img, (64, 64))  ### orig 32x32
         self.speed = 2.2
+        self.minDistance = 300
+        self.minFearDistance = 100
+        self.minPanikDistance = 60
 
     def geheZuPos(self, inx, iny):
-        if inx > self.x:
-            self.x = self.x + self.speed
-        else:
-            self.x = self.x - self.speed
+        distanz = math.sqrt(((inx-self.x)*(inx-self.x)) + ((iny-self.y)*(iny-self.y)))
+        if distanz < self.minDistance:
+            if distanz > self.minFearDistance:
+                if inx > self.x:
+                    self.x = self.x + self.speed
+                else:
+                    self.x = self.x - self.speed
 
-        if iny > self.y:
-            self.y = self.y + self.speed
-        else:
-            self.y = self.y - self.speed
+                if iny > self.y:
+                    self.y = self.y + self.speed
+                else:
+                    self.y = self.y - self.speed
+
+            if distanz < self.minFearDistance:
+                if inx > self.x:
+                    self.x = self.x - self.speed
+                else:
+                    self.x = self.x + self.speed
+
+                if iny > self.y:
+                    self.y = self.y - self.speed
+                else:
+                    self.y = self.y + self.speed
+
+                if distanz < self.minPanikDistance:
+                    self.x = 100
+                    self.y = 100
 
 
 def restartGame():
-    gameover = 0
     Level = 1
     player01Highscore = 0
-    #imgKoralle01 = pygame.image.load("pic/koralle02.png")
-
-def reduceRed(img):
-    gameover = 1
-    for x in range(img.get_width()):
-        for y in range(img.get_height()):
-            pixelColor = img.get_at((x, y))
-            if pixelColor.r > 10:
-                gameover = 0
-                pixelColor.r = pixelColor.r - 10
-            img.set_at((x, y), pixelColor)
-    return gameover
 
 def main():
     pygame.init()
@@ -138,6 +146,7 @@ def main():
 
                 if event.key == pygame.K_e:
                     print("Erschrecken")
+                    johnDoeInGame.geheZuPos(100, 100)
 
             #draw
             screen.blit(ghostInGame.img, (ghostInGame.x, ghostInGame.y))
