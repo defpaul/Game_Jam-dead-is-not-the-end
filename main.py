@@ -41,6 +41,7 @@ def reduceRed(img):
 def main():
     pygame.init()
 
+
     ghostInGame = ghost("Karl",100,100);
 
     screenSize_x = 1600
