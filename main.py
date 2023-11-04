@@ -83,64 +83,46 @@ class JohnDoe:
 
             i = i + 1
 
-        print(i)
         return retVal;
-
-    """
-            if maxWallX != 10:                
-                if colx > minWallX:
-                    A = 1
-                if colx < maxWallX:
-                    B = 1
-
-            if A and B:
-                print("----------------: ", colx, minWallX, maxWallX)
-                retVal = 1
-                break
-    """
-           # i = i + 1
-
-       # return retVal;
-
 
     def geheZuPos(self, inx, iny):
         distanz = math.sqrt(((inx-self.x)*(inx-self.x)) + ((iny-self.y)*(iny-self.y)))
         if distanz < self.minDistance:
             if distanz > self.minFearDistance:
                 if inx > self.x:
-                    self.prex = self.prex + self.speed
+                    self.prex = self.x + self.speed
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.x = self.x + self.speed
                 else:
-                    self.prex = self.prex - self.speed
+                    self.prex = self.x - self.speed
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.x = self.x - self.speed
 
                 if iny > self.y:
-                    self.prey = self.prey + self.speed
+                    self.prey = self.y + self.speed
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.y = self.y + self.speed
                 else:
-                    self.prey = self.prey - self.speed
+                    self.prey = self.y - self.speed
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.y = self.y - self.speed
 
             if distanz < self.minFearDistance:
                 if inx > self.x:
-                    self.prex = self.prex - self.speed
+                    self.prex = self.x - self.speed
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.x = self.x - self.speed
                 else:
-                    self.prex = self.prex + self.speed
+                    self.prex = self.x + self.speed
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.x = self.x + self.speed
 
                 if iny > self.y:
-                    self.prey = self.prey - self.speed
+                    self.prey = self.y - self.speed
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.y = self.y - self.speed
                 else:
-                    self.prey = self.prey + self.speed
+                    self.prey = self.y + self.speed
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.y = self.y + self.speed
 
@@ -212,6 +194,8 @@ def main():
     screenSize_y = 900
     screen = pygame.display.set_mode((screenSize_x, screenSize_y))
 
+    imgBackground = pygame.image.load("assets/background.png")
+
     gameover = 0
 
     # Titel des Fensters setzen, Mauszeiger nicht verstecken und Tastendrücke wiederholt senden.
@@ -232,6 +216,8 @@ def main():
 
         clock.tick(30) #30 FPS
         screen.fill((200, 200, 200)) # screen-Surface mit Schwarz (RGB = 0, 0, 0) füllen.
+        screen.blit(imgBackground, (0, 0))
+
         drawLevelWalls(screen, johnDoO)
 
         for event in pygame.event.get():
