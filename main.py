@@ -13,6 +13,12 @@ import random
 if not pygame.font: print('Fehler pygame.font Modul konnte nicht geladen werden!')
 if not pygame.mixer: print('Fehler pygame.mixer Modul konnte nicht geladen werden!')
 
+class ghost:
+  def __init__(self, name, x, y):
+    self.name = name
+    self.x = 100
+    self.y = 100
+
 
 def restartGame():
     gameover = 0
@@ -33,6 +39,8 @@ def reduceRed(img):
 
 def main():
     pygame.init()
+
+    ghostInGame = ghost("Karl",100,100);
 
     screenSize_x = 1280
     screenSize_y = 500
@@ -87,6 +95,12 @@ def main():
 
                 if event.key == pygame.K_DOWN:
                     print("K_Down")
+
+                if event.key == pygame.K_k:
+                    print("klopfKlop")
+
+                if event.key == pygame.K_e:
+                    print("Erschrecken")
 
         # Inhalt von screen anzeigen.
             pygame.display.flip()
