@@ -18,6 +18,7 @@ class ghost:
     self.name = name
     self.x = 100
     self.y = 100
+    img = pygame.image.load("assets/Gost.png")
 
 
 def restartGame():
@@ -42,8 +43,8 @@ def main():
 
     ghostInGame = ghost("Karl",100,100);
 
-    screenSize_x = 1280
-    screenSize_y = 500
+    screenSize_x = 1600
+    screenSize_y = 900
     screen = pygame.display.set_mode((screenSize_x, screenSize_y))
 
     gameover = 0
