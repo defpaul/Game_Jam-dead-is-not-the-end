@@ -82,19 +82,19 @@ class Ghost:
         return retVal
 
     def goLeft(self):
-        self.prex = self.x - self.speed
+        self.prex = int(self.x - int(self.speed))
         if self.proofGhostWalk(self.prex, self.prey) == 0:
             self.x = self.x - self.speed
     def goRight(self):
-        self.prex = self.x + self.speed
+        self.prex = int(self.x + int(self.speed))
         if self.proofGhostWalk(self.prex, self.prey) == 0:
             self.x = self.x + self.speed
     def goUp(self):
-        self.prey = self.y - self.speed
+        self.prey = int(self.y - int(self.speed))
         if self.proofGhostWalk(self.prex, self.prey) == 0:
             self.y = self.y - self.speed
     def goDown(self):
-        self.prey = self.y + self.speed
+        self.prey = int(self.y + int(self.speed))
         if self.proofGhostWalk(self.prex, self.prey) == 0:
             self.y = self.y + self.speed
 
@@ -141,41 +141,41 @@ class JohnDoe:
         if distanz < self.minDistance:
             if distanz > self.minFearDistance:
                 if inx > self.x:
-                    self.prex = self.x + self.speed
+                    self.prex = int(self.x) + int(self.speed) + 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
-                        self.x = self.x + self.speed
+                        self.x = self.x + int(self.speed)
                 else:
-                    self.prex = self.x - self.speed
+                    self.prex = int(self.x) + int(self.speed) - 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
-                        self.x = self.x - self.speed
+                        self.x = self.x - int(self.speed)
 
                 if iny > self.y:
-                    self.prey = self.y + self.speed
+                    self.prey = int(self.y) + int(self.speed) + 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
-                        self.y = self.y + self.speed
+                        self.y = self.y + int(self.speed)
                 else:
-                    self.prey = self.y - self.speed
+                    self.prey = int(self.y) - int(self.speed) - 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
-                        self.y = self.y - self.speed
+                        self.y = self.y - int(self.speed)
 
             if distanz < self.minFearDistance:
                 if inx > self.x:
-                    self.prex = self.x - self.speed
+                    self.prex = int(self.x) - int(self.speed) - 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
-                        self.x = self.x - self.speed
+                        self.x = int(self.x) - int(self.speed)
                 else:
-                    self.prex = self.x + self.speed
+                    self.prex = int(self.x) + int(self.speed) + 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
-                        self.x = self.x + self.speed
+                        self.x = int(self.x) + int(self.speed)
 
                 if iny > self.y:
-                    self.prey = self.y - self.speed
+                    self.prey = int(self.y) - int(self.speed) - 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
-                        self.y = self.y - self.speed
+                        self.y = int(self.y) - int(self.speed)
                 else:
-                    self.prey = self.y + self.speed
+                    self.prey = int(self.y) + int(self.speed) + 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
-                        self.y = self.y + self.speed
+                        self.y = int(self.y) + int(self.speed)
 
                 if distanz < self.minPanikDistance:
                     self.prex = 100
