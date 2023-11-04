@@ -13,6 +13,27 @@ import random
 if not pygame.font: print('Fehler pygame.font Modul konnte nicht geladen werden!')
 if not pygame.mixer: print('Fehler pygame.mixer Modul konnte nicht geladen werden!')
 
+
+class Point:
+    def __init__(self, x, y):
+        self.x = 0
+        self.y = 0
+
+class Line:
+    def __init__(self, start, end):
+        self.start = Point(0,0)
+        self.end = Point(0, 0)
+
+class Walls:
+    def __init__(self):
+        self.obstacles = []
+        i = 0
+        imax = 100
+        while i < imax:
+            self.obstacles.append( Line(Point(0, 0), Point(0, 0)) )
+            i = i + 1
+
+
 class Ghost:
     def __init__(self, name, x, y):
         self.name = name
@@ -77,10 +98,46 @@ def restartGame():
     Level = 1
     player01Highscore = 0
 
+
+def createLevelWalls(johnDoO):
+    i = 0
+    offsetX = 200
+    offsetY = 200
+    doorSpace = 80
+    randomY = random.random() * 600;
+
+    x = 0
+    xmax = 16
+    while x < xmax:
+        if offsetX < 1500:
+            randomY = random.random() * 600;
+            johnDoO.obstacles[i].start.x = offsetX
+            johnDoO.obstacles[i].start.y = 0
+            johnDoO.obstacles[i].end.x = offsetX
+            johnDoO.obstacles[i].end.y = offsetY + randomY
+            i = i + 1
+
+            johnDoO.obstacles[i].start.x = offsetX
+            johnDoO.obstacles[i].start.y = johnDoO.obstacles[i-1].end.y + doorSpace
+            johnDoO.obstacles[i].end.x = offsetX
+            johnDoO.obstacles[i].end.y = 900
+            i = i + 1
+
+            randomX = random.random() * 180;
+            offsetX = offsetX + randomX + 100
+        x = x + 1
+
+def drawLevelWalls(screen, johnDoO):
+    i = 0
+    imax = 100
+    while i < imax:
+        pygame.draw.line(screen, (120, 120, 120), (johnDoO.obstacles[i].start.x, johnDoO.obstacles[i].start.y), (johnDoO.obstacles[i].end.x, johnDoO.obstacles[i].end.y), 10)
+        i = i + 1
+
 def main():
     pygame.init()
-    ghostInGame = Ghost("TheGhost",100,100);
-    johnDoeInGame = JohnDoe("JohnDoe", 100, 100);
+    ghostInGame = Ghost("TheGhost",100,100)
+    johnDoeInGame = JohnDoe("JohnDoe", 100, 100)
 
     screenSize_x = 1600
     screenSize_y = 900
@@ -96,17 +153,17 @@ def main():
     # Clock-Objekt erstellen, das wir benötigen, um die Framerate zu begrenzen.
     clock = pygame.time.Clock()
 
+    johnDoO = Walls()
+    createLevelWalls(johnDoO)
+
     running = 1;
     while running:
 
         clock.tick(30) #30 FPS
         screen.fill((200, 200, 200)) # screen-Surface mit Schwarz (RGB = 0, 0, 0) füllen.
+        drawLevelWalls(screen, johnDoO)
 
         for event in pygame.event.get():
-            #print("imgTrash01Pos_y:",imgTrash01Pos_y)
-            #print("playerpositionAbs_y: ",playerpositionAbs_y, " --- imgTrash01Pos_y: ",imgTrash01Pos_y)
-            #print("imgTrash01PosAbs_y:",imgTrash01PosAbs_y," --- playerpositionAbs_y:",playerpositionAbs_y)
-
             # Exit with Esc
             if event.type == pygame.QUIT:
                 running = False
