@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 # GameJam 2023 - Death Is Not The End
 # Date: 04-11-2023
-# Author: Jörg Angermayyer and Paul
+# Author: Jörg Angermayer and Paul
 # Licence: Freeware
 
 
