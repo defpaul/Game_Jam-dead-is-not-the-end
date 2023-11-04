@@ -117,6 +117,7 @@ def createLevelWalls(johnDoO):
             johnDoO.obstacles[i].end.y = offsetY + randomY
             i = i + 1
 
+
             johnDoO.obstacles[i].start.x = offsetX
             johnDoO.obstacles[i].start.y = johnDoO.obstacles[i-1].end.y + doorSpace
             johnDoO.obstacles[i].end.x = offsetX
