@@ -63,9 +63,13 @@ class Ghost:
         self.prey = 0
         self.x = 200
         self.y = 200
-        self.img = pygame.image.load("assets/Gost.png")
-        self.img = pygame.transform.scale(self.img, (64, 64)) ### orig 32x32
+        self.img = [pygame.image.load("assets/Gost.png"), pygame.image.load("assets/Gost_1.png"),pygame.image.load("assets/Gost.png"), pygame.image.load("assets/Gost_2.png"), ]
+        self.img = [pygame.transform.scale(self.img[0], (64, 64)),pygame.transform.scale(self.img[1], (64, 64)),pygame.transform.scale(self.img[2], (64, 64)) ,pygame.transform.scale(self.img[3], (64, 64))] ### orig 32x32
         self.speed = 2.8
+        self.frame_delay = 100
+        self.current_frame = 0
+        self.last_frame_time = pygame.time.get_ticks()
+        self.current_time = pygame.time.get_ticks()
 
     def proofGhostWalk(self, inx, iny):
         retVal = 0
@@ -97,6 +101,20 @@ class Ghost:
         self.prey = int(self.y + int(self.speed))
         if self.proofGhostWalk(self.prex, self.prey) == 0:
             self.y = self.y + self.speed
+
+    def animations(self):
+        self.current_time = pygame.time.get_ticks()
+        if self.current_time - self.last_frame_time > self.frame_delay:
+            if self.current_frame >= 3:
+                self.current_frame = 0
+            else:
+                self.current_frame = self.current_frame +1
+                print(self.current_frame)
+            self.last_frame_time = self.current_time
+
+        print(f"{self.current_frame}")
+        return self.current_frame
+
 
 
 class JohnDoe:
@@ -308,12 +326,14 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
-            #draw
-            screen.blit(ghostInGame.img, (ghostInGame.x, ghostInGame.y))
-            screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
+        frame = ghostInGame.animations()
+
+        #draw
+        screen.blit(ghostInGame.img[frame], (ghostInGame.x, ghostInGame.y))
+        screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
 
         # Inhalt von screen anzeigen.
-            pygame.display.flip()
+        pygame.display.flip()
 
 
 # Überprüfen, ob dieses Modul als Programm läuft und nicht in einem anderen Modul importiert wird.
