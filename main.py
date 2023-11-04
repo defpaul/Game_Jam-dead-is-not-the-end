@@ -248,6 +248,7 @@ def main():
     screenSize_y = 900
     screen = pygame.display.set_mode((screenSize_x, screenSize_y))
     imgBackground = pygame.image.load("assets/background.png")
+    icon = pygame.image.load('assets/han.png')
 
     # Titel des Fensters setzen, Mauszeiger nicht verstecken und Tastendrücke wiederholt senden.
     pygame.display.set_caption("GameJam2023 - DeathIsNotTheEnd - GhostWork")
@@ -269,6 +270,7 @@ def main():
         clock.tick(30) #30 FPS
         screen.fill((200, 200, 200)) # screen-Surface mit Schwarz (RGB = 0, 0, 0) füllen.
         screen.blit(imgBackground, (0, 0))
+        pygame.display.set_icon(icon)
 
         drawLevelWalls(screen, johnDoO)
         drawLevelAntiGhosts(screen, antighost)
