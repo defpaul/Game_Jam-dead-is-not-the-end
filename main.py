@@ -33,24 +33,71 @@ class Walls:
             self.obstacles.append( Line(Point(0, 0), Point(0, 0)) )
             i = i + 1
 
+class AntiGhost:
+    def __init__(self, x, y):
+        self.x = 300
+        self.y = 300
+        self.img = pygame.image.load("assets/han.png")
+        self.img = pygame.transform.scale(self.img, (64, 64)) ### orig 32x32
+
+class AntiGhostArray:
+    def __init__(self):
+        self.anti = []
+        i = 0
+        imax = 10
+        while i < imax:
+            x = 200 + (random.random() * 1200)
+            y = 100 + (random.random() * 700)
+            aghost = AntiGhost(x,y)
+            self.anti.append( aghost)
+            self.anti[i].x = x
+            self.anti[i].y = y
+            i = i + 1
+
 
 class Ghost:
-    def __init__(self, name, x, y):
+    def __init__(self, inAghost, name, x, y):
+        self.aghost = inAghost
         self.name = name
+        self.prex = 0
+        self.prey = 0
         self.x = 200
         self.y = 200
         self.img = pygame.image.load("assets/Gost.png")
         self.img = pygame.transform.scale(self.img, (64, 64)) ### orig 32x32
         self.speed = 2.8
 
+    def proofGhostWalk(self, inx, iny):
+        retVal = 0
+        distanzeLimit = 60
+        i = 0
+        imax = 10
+        while i < imax:
+            distanz = math.sqrt(((inx - self.aghost.anti[i].x) * (inx - self.aghost.anti[i].x)) + ((iny - self.aghost.anti[i].y) * (iny - self.aghost.anti[i].y)))
+            if distanz < distanzeLimit:
+                retVal = 1
+                break
+            i = i + 1
+
+        return retVal
+
     def goLeft(self):
-        self.x = self.x - self.speed
+        self.prex = self.x - self.speed
+        if self.proofGhostWalk(self.prex, self.prey) == 0:
+            self.x = self.x - self.speed
     def goRight(self):
-        self.x = self.x + self.speed
+        self.prex = self.x + self.speed
+        if self.proofGhostWalk(self.prex, self.prey) == 0:
+            self.x = self.x + self.speed
     def goUp(self):
-        self.y = self.y - self.speed
+        self.prey = self.y - self.speed
+        if self.proofGhostWalk(self.prex, self.prey) == 0:
+            self.y = self.y - self.speed
     def goDown(self):
-        self.y = self.y + self.speed
+        self.prey = self.y + self.speed
+        if self.proofGhostWalk(self.prex, self.prey) == 0:
+            self.y = self.y + self.speed
+
 
 class JohnDoe:
     def __init__(self, walls,  name, x, y):
@@ -136,10 +183,6 @@ class JohnDoe:
                     self.x = 100
                     self.y = 100
 
-def restartGame():
-    Level = 1
-    player01Highscore = 0
-
 
 def createLevelWalls(johnDoO):
     i = 0
@@ -191,16 +234,20 @@ def drawLevelWalls(screen, johnDoO):
         pygame.draw.line(screen, (120, 120, 120), (johnDoO.obstacles[i].start.x, johnDoO.obstacles[i].start.y), (johnDoO.obstacles[i].end.x, johnDoO.obstacles[i].end.y), 10)
         i = i + 1
 
+def drawLevelAntiGhosts(screen, aghost):
+    i = 0
+    imax = 10
+    while i < imax:
+        screen.blit(aghost.anti[i].img, (aghost.anti[i].x, aghost.anti[i].y))
+        i = i + 1
+
+
 def main():
     pygame.init()
-
     screenSize_x = 1600
     screenSize_y = 900
     screen = pygame.display.set_mode((screenSize_x, screenSize_y))
-
     imgBackground = pygame.image.load("assets/background.png")
-
-    gameover = 0
 
     # Titel des Fensters setzen, Mauszeiger nicht verstecken und Tastendrücke wiederholt senden.
     pygame.display.set_caption("GameJam2023 - DeathIsNotTheEnd - GhostWork")
@@ -212,8 +259,9 @@ def main():
 
     johnDoO = Walls()
     createLevelWalls(johnDoO)
-    ghostInGame = Ghost("TheGhost",100,100)
     johnDoeInGame = JohnDoe(johnDoO, "JohnDoe", 100, 100)
+    antighost = AntiGhostArray();
+    ghostInGame = Ghost(antighost, "TheGhost", 100, 100)
 
     running = 1;
     while running:
@@ -223,6 +271,7 @@ def main():
         screen.blit(imgBackground, (0, 0))
 
         drawLevelWalls(screen, johnDoO)
+        drawLevelAntiGhosts(screen, antighost)
 
         for event in pygame.event.get():
             # Exit with Esc
@@ -231,13 +280,11 @@ def main():
 
             # Key-Events - key was pressed
             if event.type == pygame.KEYDOWN:
-                if gameover == 1:
-                    if event.key == pygame.K_RETURN:
-                        print("K_return/Reset")
-                        restartGame()
+                if event.key == pygame.K_RETURN:
+                    print("K_return/Reset")
 
-                    if event.key == pygame.K_SPACE:
-                        print("K_space")
+                if event.key == pygame.K_SPACE:
+                    print("K_space")
 
                 if event.key == pygame.K_ESCAPE:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
@@ -264,7 +311,6 @@ def main():
             #draw
             screen.blit(ghostInGame.img, (ghostInGame.x, ghostInGame.y))
             screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
-
 
         # Inhalt von screen anzeigen.
             pygame.display.flip()
