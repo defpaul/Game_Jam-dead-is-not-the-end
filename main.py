@@ -356,8 +356,9 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
-        ghostInGame.score()
+
         if ghostInGame.moved == 1:
+            ghostInGame.score()
             text_obj = font.render(f"{round(ghostInGame.cunter_time /300, 2)} s", True, (255, 255, 255))
 
 
@@ -386,8 +387,9 @@ def main():
                 johnDoeInGame.y = 100
                 ghostInGame.x = 100
                 ghostInGame.y = 400
-                antighost.initRandomAntiGhost()
                 ghostInGame.cunter_time = 0
+                antighost.initRandomAntiGhost()
+
 
         # Inhalt von screen anzeigen.
         pygame.display.flip()
