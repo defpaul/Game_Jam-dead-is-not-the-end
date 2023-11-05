@@ -352,14 +352,11 @@ def main():
 
                 if event.key == pygame.K_k:
                     johnDoeInGame.geheZuPos(ghostInGame.x, ghostInGame.y)
+                    ghostInGame.moved = 1
 
                 if event.key == pygame.K_e:
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
-
-        ghostInGame.score()
-        if ghostInGame.moved == 1:
-            text_obj = font.render(f"{round(ghostInGame.cunter_time /300, 2)} s", True, (255, 255, 255))
 
 
 
@@ -389,9 +386,12 @@ def main():
                 ghostInGame.y = 400
                 antighost.initRandomAntiGhost()
                 ghostInGame.cunter_time = 0
-                text_obj = font.render(f"{round(ghostInGame.cunter_time / 300, 2)} s", True, (255, 255, 255))
+
 
         # Inhalt von screen anzeigen.
+        ghostInGame.score()
+        if ghostInGame.moved == 1:
+            text_obj = font.render(f"{round(ghostInGame.cunter_time /300, 2)} s", True, (255, 255, 255))
         pygame.display.flip()
 
 if __name__ == '__main__':
