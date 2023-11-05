@@ -82,6 +82,7 @@ class Ghost:
     def proofGhostWalk(self, inx, iny):
         self.moved = 1
         retVal = 0
+        self.moved = 1
         i = 0
         imax = 10
         while i < imax:
@@ -370,7 +371,7 @@ def main():
         drawLevelWalls(screen, johnDoO)
         drawLevelAntiGhosts(screen, antighost)
         screen.blit(exit.img, (exit.posx, exit.posy))
-        #pygame.draw.circle(screen, (200, 200, 255), (ghostInGame.x + 32, ghostInGame.y + 32), johnDoeInGame.minDistance)
+        #pygame.draw.circle(screen, (200, 200, 255), (ghostInGame.x + 32, ghostInGame.y + 32), johnDoeInGame.minDistance,4)
         screen.blit(ghostInGame.img[frame], (ghostInGame.x, ghostInGame.y))
         screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
         screen.blit(text_obj, (800, 50))
@@ -388,6 +389,7 @@ def main():
                 ghostInGame.y = 400
                 antighost.initRandomAntiGhost()
                 ghostInGame.cunter_time = 0
+                text_obj = font.render(f"{round(ghostInGame.cunter_time / 300, 2)} s", True, (255, 255, 255))
 
         # Inhalt von screen anzeigen.
         pygame.display.flip()
