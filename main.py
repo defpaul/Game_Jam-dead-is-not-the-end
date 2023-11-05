@@ -4,6 +4,7 @@
 # Author: Jörg Angermayer and Paul
 # Licence: Freeware
 import math
+import time
 
 # Pygame-Modul importieren.
 import pygame
@@ -121,8 +122,8 @@ class JohnDoe:
     def __init__(self, walls,  name, x, y):
         self.walls = walls
         self.name = name
-        self.x = 100
-        self.y = 100
+        self.x = x
+        self.y = y
         self.prex = 100
         self.prey = 100
         self.img = pygame.image.load("assets/john_doe.png")
@@ -259,6 +260,25 @@ def drawLevelAntiGhosts(screen, aghost):
         screen.blit(aghost.anti[i].img, (aghost.anti[i].x, aghost.anti[i].y))
         i = i + 1
 
+class Exit:
+    def __init__(self, posx, posy):
+        self.posx = posx
+        self.posy = posy
+        self.img = pygame.image.load("assets/exit.png")
+        self.img = pygame.transform.scale(self.img, (64, 64))
+        self.imgwin = pygame.image.load("assets/winn_screan.png")
+
+    def scan(self, johnDoO):
+        if self.posx < johnDoO.x +30 and self.posy < johnDoO.y +30 :
+            self.exit()
+        else:
+            return 1
+
+    def exit(self):
+        print("you wonn")
+        time.sleep(2)
+        return 0
+
 
 def main():
     pygame.init()
@@ -280,6 +300,7 @@ def main():
     johnDoeInGame = JohnDoe(johnDoO, "JohnDoe", 100, 100)
     antighost = AntiGhostArray();
     ghostInGame = Ghost(antighost, "TheGhost", 100, 100)
+    exit = Exit(1500,600)
 
     running = 1;
     while running:
@@ -290,6 +311,7 @@ def main():
 
         drawLevelWalls(screen, johnDoO)
         drawLevelAntiGhosts(screen, antighost)
+        screen.blit(exit.img, (1500, 600))
 
         for event in pygame.event.get():
             # Exit with Esc
@@ -326,6 +348,7 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
+        running = exit.scan(johnDoeInGame)
         frame = ghostInGame.animations()
 
         #draw
@@ -334,6 +357,9 @@ def main():
 
         # Inhalt von screen anzeigen.
         pygame.display.flip()
+
+    screen.blit(exit.imgwin, (0, 0))
+    time.sleep(10)
 
 
 # Überprüfen, ob dieses Modul als Programm läuft und nicht in einem anderen Modul importiert wird.
