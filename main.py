@@ -76,6 +76,8 @@ class Ghost:
         self.current_frame = 0
         self.last_frame_time = pygame.time.get_ticks()
         self.current_time = pygame.time.get_ticks()
+        self.cunter_time = 0
+        self.moved = 0
 
     def proofGhostWalk(self, inx, iny):
         retVal = 0
@@ -120,6 +122,10 @@ class Ghost:
         #print(f"{self.current_frame}")
         return self.current_frame
 
+    def score(self):
+        if self.moved == 1:
+            self.cunter_time = self.current_time +1
+            return self.cunter_time
 
 
 class JohnDoe:
@@ -286,6 +292,8 @@ def main():
     screenSize_x = 1600
     screenSize_y = 900
     youwon = 0
+    cunter=0
+    #cunter_display = f"{cunter} s"
     exitcounter = 0
     screen = pygame.display.set_mode((screenSize_x, screenSize_y))
     imgBackground = pygame.image.load("assets/background.png")
@@ -294,6 +302,9 @@ def main():
     pygame.display.set_caption("GameJam2023 - DeathIsNotTheEnd - GhostWork")
     pygame.mouse.set_visible(1)
     pygame.key.set_repeat(1, 30)
+
+    font = pygame.font.Font(None, 50)
+    text_obj = font.render(f"{0} s", True, (255, 255, 255))
 
     clock = pygame.time.Clock() # Clock-Objekt erstellen, das wir benötigen, um die Framerate zu begrenzen.
 
@@ -345,6 +356,12 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
+        cunter = ghostInGame.score()
+        if ghostInGame.moved == 1:
+            text_obj = font.render(f"{round(cunter /300, 2)} s", True, (255, 255, 255))
+
+
+
         youwon = exit.scan(johnDoeInGame)
         frame = ghostInGame.animations()
 
@@ -356,6 +373,7 @@ def main():
         #pygame.draw.circle(screen, (200, 200, 255), (ghostInGame.x + 32, ghostInGame.y + 32), johnDoeInGame.minDistance)
         screen.blit(ghostInGame.img[frame], (ghostInGame.x, ghostInGame.y))
         screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
+        screen.blit(text_obj, (800, 50))
 
 
         if youwon == 1:
