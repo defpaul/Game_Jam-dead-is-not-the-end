@@ -356,7 +356,7 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
-
+        ghostInGame.score()
         if ghostInGame.moved == 1:
             ghostInGame.score()
             text_obj = font.render(f"{round(ghostInGame.cunter_time /300, 2)} s", True, (255, 255, 255))
@@ -371,7 +371,7 @@ def main():
         drawLevelWalls(screen, johnDoO)
         drawLevelAntiGhosts(screen, antighost)
         screen.blit(exit.img, (exit.posx, exit.posy))
-        #pygame.draw.circle(screen, (200, 200, 255), (ghostInGame.x + 32, ghostInGame.y + 32), johnDoeInGame.minDistance)
+        #pygame.draw.circle(screen, (200, 200, 255), (ghostInGame.x + 32, ghostInGame.y + 32), johnDoeInGame.minDistance,4)
         screen.blit(ghostInGame.img[frame], (ghostInGame.x, ghostInGame.y))
         screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
         screen.blit(text_obj, (800, 50))
@@ -388,8 +388,7 @@ def main():
                 ghostInGame.x = 100
                 ghostInGame.y = 400
                 ghostInGame.cunter_time = 0
-                antighost.initRandomAntiGhost()
-
+                text_obj = font.render(f"{round(ghostInGame.cunter_time / 300, 2)} s", True, (255, 255, 255))
 
         # Inhalt von screen anzeigen.
         pygame.display.flip()
