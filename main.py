@@ -358,7 +358,6 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
-        ghostInGame.score()
         if ghostInGame.moved == 1:
             text_obj = font.render(f"{round(ghostInGame.cunter_time /300, 2)} s", True, (255, 255, 255))
 
