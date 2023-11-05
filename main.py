@@ -44,6 +44,9 @@ class AntiGhost:
 class AntiGhostArray:
     def __init__(self):
         self.anti = []
+        self.initRandomAntiGhost()
+
+    def initRandomAntiGhost(self):
         i = 0
         imax = 10
         while i < imax:
@@ -56,14 +59,15 @@ class AntiGhostArray:
             i = i + 1
 
 
+
 class Ghost:
     def __init__(self, inAghost, name, x, y):
         self.aghost = inAghost
         self.name = name
         self.prex = 0
         self.prey = 0
-        self.x = 100
-        self.y = 400
+        self.x = x
+        self.y = y
         self.distanzeLimit = 60
         self.img = [pygame.image.load("assets/Gost.png"), pygame.image.load("assets/Gost_1.png"),pygame.image.load("assets/Gost.png"), pygame.image.load("assets/Gost_2.png"), ]
         self.img = [pygame.transform.scale(self.img[0], (64, 64)),pygame.transform.scale(self.img[1], (64, 64)),pygame.transform.scale(self.img[2], (64, 64)) ,pygame.transform.scale(self.img[3], (64, 64))] ### orig 32x32
@@ -136,6 +140,7 @@ class JohnDoe:
     def proofWallCollision(self, colx, coly):
         wallXLimit = 32
         colx = int(colx)
+        coly = int(coly)
         retVal = 0
         i = 0
         imax = 100
@@ -144,8 +149,8 @@ class JohnDoe:
             minWallX = int(wallX - wallXLimit)
             maxWallX = int(wallX + wallXLimit)
 
-            minY = int(self.walls.obstacles[i].start.y)
-            maxY = int(self.walls.obstacles[i].end.y)
+            minY = int(self.walls.obstacles[i].start.y+32)
+            maxY = int(self.walls.obstacles[i].end.y-32)
 
             if colx > minWallX and colx < maxWallX:
                 if coly > minY and coly < maxY:
@@ -298,6 +303,7 @@ def main():
     antighost = AntiGhostArray();
     ghostInGame = Ghost(antighost, "TheGhost", 100, 400)
     exit = Exit(1500,600)
+    #exit = Exit(100, 400)
 
     running = 1;
     while running:
@@ -347,6 +353,7 @@ def main():
         drawLevelWalls(screen, johnDoO)
         drawLevelAntiGhosts(screen, antighost)
         screen.blit(exit.img, (1500, 600))
+        #screen.blit(exit.img, (100, 400))
         #pygame.draw.circle(screen, (200, 200, 255), (ghostInGame.x + 32, ghostInGame.y + 32), johnDoeInGame.minDistance)
         screen.blit(ghostInGame.img[frame], (ghostInGame.x, ghostInGame.y))
         screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
@@ -361,6 +368,7 @@ def main():
                 johnDoeInGame.y = 100
                 ghostInGame.x = 100
                 ghostInGame.y = 400
+                antighost.initRandomAntiGhost()
 
         # Inhalt von screen anzeigen.
         pygame.display.flip()
