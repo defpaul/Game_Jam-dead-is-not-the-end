@@ -271,8 +271,7 @@ class Exit:
 
     def scan(self, johnDoO):
         if self.posx < johnDoO.x +30 and self.posy < johnDoO.y +30 :
-            self.exit()
-            pygame.event.post(pygame.event.Event(pygame.QUIT))
+            return 1
         else:
             return 0
 
@@ -301,7 +300,7 @@ def main():
     createLevelWalls(johnDoO)
     johnDoeInGame = JohnDoe(johnDoO, "JohnDoe", 100, 100)
     antighost = AntiGhostArray();
-    ghostInGame = Ghost(antighost, "TheGhost", 100, 100)
+    ghostInGame = Ghost(antighost, "TheGhost", 1500, 800)
     exit = Exit(1500,600)
 
     running = 1;
