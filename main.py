@@ -62,11 +62,12 @@ class Ghost:
         self.name = name
         self.prex = 0
         self.prey = 0
-        self.x = 200
-        self.y = 200
+        self.x = 100
+        self.y = 400
+        self.distanzeLimit = 60
         self.img = [pygame.image.load("assets/Gost.png"), pygame.image.load("assets/Gost_1.png"),pygame.image.load("assets/Gost.png"), pygame.image.load("assets/Gost_2.png"), ]
         self.img = [pygame.transform.scale(self.img[0], (64, 64)),pygame.transform.scale(self.img[1], (64, 64)),pygame.transform.scale(self.img[2], (64, 64)) ,pygame.transform.scale(self.img[3], (64, 64))] ### orig 32x32
-        self.speed = 2.8
+        self.speed = 4
         self.frame_delay = 100
         self.current_frame = 0
         self.last_frame_time = pygame.time.get_ticks()
@@ -74,12 +75,11 @@ class Ghost:
 
     def proofGhostWalk(self, inx, iny):
         retVal = 0
-        distanzeLimit = 60
         i = 0
         imax = 10
         while i < imax:
             distanz = math.sqrt(((inx - self.aghost.anti[i].x) * (inx - self.aghost.anti[i].x)) + ((iny - self.aghost.anti[i].y) * (iny - self.aghost.anti[i].y)))
-            if distanz < distanzeLimit:
+            if distanz < self.distanzeLimit:
                 retVal = 1
                 break
             i = i + 1
@@ -110,10 +110,10 @@ class Ghost:
                 self.current_frame = 0
             else:
                 self.current_frame = self.current_frame +1
-                print(self.current_frame)
+                #print(self.current_frame)
             self.last_frame_time = self.current_time
 
-        print(f"{self.current_frame}")
+        #print(f"{self.current_frame}")
         return self.current_frame
 
 
@@ -128,19 +128,19 @@ class JohnDoe:
         self.prey = 100
         self.img = pygame.image.load("assets/john_doe.png")
         self.img = pygame.transform.scale(self.img, (64, 64))  ### orig 32x32
-        self.speed = 2.2
-        self.minDistance = 300
-        self.minFearDistance = 100
-        self.minPanikDistance = 60
+        self.speed = 2
+        self.minDistance = 280
+        self.minFearDistance = 90
+        self.minPanikDistance = 30
 
     def proofWallCollision(self, colx, coly):
-        wallXLimit = 60
+        wallXLimit = 32
         colx = int(colx)
         retVal = 0
         i = 0
         imax = 100
         while i < imax:
-            wallX = int(self.walls.obstacles[i].start.x)
+            wallX = int(self.walls.obstacles[i].start.x-32)
             minWallX = int(wallX - wallXLimit)
             maxWallX = int(wallX + wallXLimit)
 
@@ -158,15 +158,23 @@ class JohnDoe:
     def geheZuPos(self, inx, iny):
         distanz = math.sqrt(((inx-self.x)*(inx-self.x)) + ((iny-self.y)*(iny-self.y)))
         if distanz < self.minDistance:
-            if distanz > self.minFearDistance:
+            if distanz >= self.minFearDistance:
                 if inx > self.x:
-                    self.prex = int(self.x) + int(self.speed) + 1
-                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                    prex = int(self.x) + int(self.speed) + 1
+                    if self.proofWallCollision(prex , self.prey) == 0:
                         self.x = self.x + int(self.speed)
-                else:
-                    self.prex = int(self.x) + int(self.speed) - 1
-                    if self.proofWallCollision(self.prex , self.prey) == 0:
+                    #prex = int(self.x) + 1
+                    #if self.proofWallCollision(prex , self.prey) == 0:
+                    #    self.x = self.x - 1
+
+                if inx < self.x:
+                    prex = int(self.x) - int(self.speed) - 1
+                    if self.proofWallCollision(prex , self.prey) == 0:
                         self.x = self.x - int(self.speed)
+                    #prex = int(self.x) - 1
+                    #if self.proofWallCollision(prex , self.prey) == 0:
+                    #    self.x = self.x - 1
+
 
                 if iny > self.y:
                     self.prey = int(self.y) + int(self.speed) + 1
@@ -176,7 +184,7 @@ class JohnDoe:
                     self.prey = int(self.y) - int(self.speed) - 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.y = self.y - int(self.speed)
-
+"""
             if distanz < self.minFearDistance:
                 if inx > self.x:
                     self.prex = int(self.x) - int(self.speed) - 1
@@ -201,7 +209,7 @@ class JohnDoe:
                     self.prey = 100
                     self.x = 100
                     self.y = 100
-
+"""
 
 def createLevelWalls(johnDoO):
     i = 0
@@ -243,7 +251,7 @@ def createLevelWalls(johnDoO):
             i = i + 1
 
             randomX = random.random() * 180;
-            offsetX = offsetX + randomX + 100
+            offsetX = offsetX + randomX + 200
         x = x + 1
 
 def drawLevelWalls(screen, johnDoO):
@@ -271,19 +279,21 @@ class Exit:
     def scan(self, johnDoO):
         if self.posx < johnDoO.x +30 and self.posy < johnDoO.y +30 :
             self.exit()
+            pygame.event.post(pygame.event.Event(pygame.QUIT))
         else:
-            return 1
+            return 0
 
     def exit(self):
-        print("you wonn")
-        time.sleep(2)
-        return 0
+        print("you won")
+        return 1
 
 
 def main():
     pygame.init()
     screenSize_x = 1600
     screenSize_y = 900
+    youwon = 0
+    exitcounter = 0
     screen = pygame.display.set_mode((screenSize_x, screenSize_y))
     imgBackground = pygame.image.load("assets/background.png")
 
@@ -292,8 +302,7 @@ def main():
     pygame.mouse.set_visible(1)
     pygame.key.set_repeat(1, 30)
 
-    # Clock-Objekt erstellen, das wir benötigen, um die Framerate zu begrenzen.
-    clock = pygame.time.Clock()
+    clock = pygame.time.Clock() # Clock-Objekt erstellen, das wir benötigen, um die Framerate zu begrenzen.
 
     johnDoO = Walls()
     createLevelWalls(johnDoO)
@@ -304,19 +313,13 @@ def main():
 
     running = 1;
     while running:
-
         clock.tick(30) #30 FPS
-        screen.fill((200, 200, 200)) # screen-Surface mit Schwarz (RGB = 0, 0, 0) füllen.
-        screen.blit(imgBackground, (0, 0))
-
-        drawLevelWalls(screen, johnDoO)
-        drawLevelAntiGhosts(screen, antighost)
-        screen.blit(exit.img, (1500, 600))
+        #screen.fill((200, 200, 200)) # screen-Surface mit Schwarz (RGB = 0, 0, 0) füllen.
 
         for event in pygame.event.get():
             # Exit with Esc
             if event.type == pygame.QUIT:
-                running = False
+               running = False
 
             # Key-Events - key was pressed
             if event.type == pygame.KEYDOWN:
@@ -348,23 +351,27 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
-        running = exit.scan(johnDoeInGame)
+        youwon = exit.scan(johnDoeInGame)
         frame = ghostInGame.animations()
 
         #draw
+        screen.blit(imgBackground, (0, 0))
+        drawLevelWalls(screen, johnDoO)
+        drawLevelAntiGhosts(screen, antighost)
+        screen.blit(exit.img, (1500, 600))
+        #pygame.draw.circle(screen, (200, 200, 255), (ghostInGame.x + 32, ghostInGame.y + 32), johnDoeInGame.minDistance)
         screen.blit(ghostInGame.img[frame], (ghostInGame.x, ghostInGame.y))
         screen.blit(johnDoeInGame.img, (johnDoeInGame.x, johnDoeInGame.y))
+
+
+        if youwon == 1:
+            exitcounter =  exitcounter + 1
+            screen.blit(exit.imgwin, (0, 0))
+            if exitcounter > 30:
+                pygame.event.post(pygame.event.Event(pygame.QUIT))
 
         # Inhalt von screen anzeigen.
         pygame.display.flip()
 
-    screen.blit(exit.imgwin, (0, 0))
-    time.sleep(10)
-
-
-# Überprüfen, ob dieses Modul als Programm läuft und nicht in einem anderen Modul importiert wird.
-
 if __name__ == '__main__':
-    # Unsere Main-Funktion aufrufen.
-
     main()
