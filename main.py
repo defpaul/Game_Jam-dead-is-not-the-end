@@ -275,10 +275,6 @@ class Exit:
         else:
             return 0
 
-    def exit(self):
-        print("you won")
-        return 1
-
 
 def main():
     pygame.init()
@@ -359,7 +355,7 @@ def main():
         if youwon == 1:
             exitcounter =  exitcounter + 1
             screen.blit(exit.imgwin, (0, 0))
-            if exitcounter > 30:
+            if exitcounter > 60:
                 pygame.event.post(pygame.event.Event(pygame.QUIT))
 
         # Inhalt von screen anzeigen.
