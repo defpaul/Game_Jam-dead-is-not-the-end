@@ -80,6 +80,7 @@ class Ghost:
         self.moved = 0
 
     def proofGhostWalk(self, inx, iny):
+        self.moved = 1
         retVal = 0
         i = 0
         imax = 10
@@ -125,7 +126,7 @@ class Ghost:
     def score(self):
         if self.moved == 1:
             self.cunter_time = self.current_time +1
-            return self.cunter_time
+
 
 
 class JohnDoe:
@@ -292,7 +293,6 @@ def main():
     screenSize_x = 1600
     screenSize_y = 900
     youwon = 0
-    cunter=0
     #cunter_display = f"{cunter} s"
     exitcounter = 0
     screen = pygame.display.set_mode((screenSize_x, screenSize_y))
@@ -356,9 +356,9 @@ def main():
                     print("Erschrecken")
                     johnDoeInGame.geheZuPos(100, 100)
 
-        cunter = ghostInGame.score()
+        ghostInGame.score()
         if ghostInGame.moved == 1:
-            text_obj = font.render(f"{round(cunter /300, 2)} s", True, (255, 255, 255))
+            text_obj = font.render(f"{round(ghostInGame.cunter_time /300, 2)} s", True, (255, 255, 255))
 
 
 
@@ -378,6 +378,7 @@ def main():
 
         if youwon == 1:
             exitcounter =  exitcounter + 1
+            ghostInGame.moved = 0
             screen.blit(exit.imgwin, (0, 0))
             if exitcounter > 60:
                 createLevelWalls(johnDoO)
@@ -386,6 +387,7 @@ def main():
                 ghostInGame.x = 100
                 ghostInGame.y = 400
                 antighost.initRandomAntiGhost()
+                ghostInGame.cunter_time = 0
 
         # Inhalt von screen anzeigen.
         pygame.display.flip()
