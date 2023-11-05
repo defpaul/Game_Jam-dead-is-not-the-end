@@ -82,6 +82,7 @@ class Ghost:
     def proofGhostWalk(self, inx, iny):
         self.moved = 1
         retVal = 0
+        self.moved = 1
         i = 0
         imax = 10
         while i < imax:
@@ -351,6 +352,7 @@ def main():
 
                 if event.key == pygame.K_k:
                     johnDoeInGame.geheZuPos(ghostInGame.x, ghostInGame.y)
+                    ghostInGame.moved = 1
 
                 if event.key == pygame.K_e:
                     print("Erschrecken")
@@ -358,7 +360,6 @@ def main():
 
         ghostInGame.score()
         if ghostInGame.moved == 1:
-            ghostInGame.score()
             text_obj = font.render(f"{round(ghostInGame.cunter_time /300, 2)} s", True, (255, 255, 255))
 
 
@@ -388,9 +389,12 @@ def main():
                 ghostInGame.x = 100
                 ghostInGame.y = 400
                 ghostInGame.cunter_time = 0
-                text_obj = font.render(f"{round(ghostInGame.cunter_time / 300, 2)} s", True, (255, 255, 255))
+
 
         # Inhalt von screen anzeigen.
+        ghostInGame.score()
+        if ghostInGame.moved == 1:
+            text_obj = font.render(f"{round(ghostInGame.cunter_time /300, 2)} s", True, (255, 255, 255))
         pygame.display.flip()
 
 if __name__ == '__main__':
