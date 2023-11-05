@@ -156,35 +156,28 @@ class JohnDoe:
         return retVal;
 
     def geheZuPos(self, inx, iny):
-        distanz = math.sqrt(((inx-self.x)*(inx-self.x)) + ((iny-self.y)*(iny-self.y)))
+        distanz = math.sqrt(((inx-self.x-32)*(inx-self.x-32)) + ((iny-self.y-32)*(iny-self.y-32)))
         if distanz < self.minDistance:
             if distanz >= self.minFearDistance:
                 if inx > self.x:
-                    prex = int(self.x) + int(self.speed) + 1
+                    prex = int(self.x) + int(self.speed) + 2
                     if self.proofWallCollision(prex , self.prey) == 0:
                         self.x = self.x + int(self.speed)
-                    #prex = int(self.x) + 1
-                    #if self.proofWallCollision(prex , self.prey) == 0:
-                    #    self.x = self.x - 1
 
                 if inx < self.x:
-                    prex = int(self.x) - int(self.speed) - 1
+                    prex = int(self.x) - int(self.speed) - 2
                     if self.proofWallCollision(prex , self.prey) == 0:
                         self.x = self.x - int(self.speed)
-                    #prex = int(self.x) - 1
-                    #if self.proofWallCollision(prex , self.prey) == 0:
-                    #    self.x = self.x - 1
-
 
                 if iny > self.y:
                     self.prey = int(self.y) + int(self.speed) + 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.y = self.y + int(self.speed)
-                else:
+                if iny < self.y:
                     self.prey = int(self.y) - int(self.speed) - 1
                     if self.proofWallCollision(self.prex , self.prey) == 0:
                         self.y = self.y - int(self.speed)
-"""
+
             if distanz < self.minFearDistance:
                 if inx > self.x:
                     self.prex = int(self.x) - int(self.speed) - 1
@@ -209,7 +202,7 @@ class JohnDoe:
                     self.prey = 100
                     self.x = 100
                     self.y = 100
-"""
+
 
 def createLevelWalls(johnDoO):
     i = 0
