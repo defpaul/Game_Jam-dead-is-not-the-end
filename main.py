@@ -296,7 +296,7 @@ def main():
     createLevelWalls(johnDoO)
     johnDoeInGame = JohnDoe(johnDoO, "JohnDoe", 100, 100)
     antighost = AntiGhostArray();
-    ghostInGame = Ghost(antighost, "TheGhost", 1500, 800)
+    ghostInGame = Ghost(antighost, "TheGhost", 100, 400)
     exit = Exit(1500,600)
 
     running = 1;
@@ -356,7 +356,11 @@ def main():
             exitcounter =  exitcounter + 1
             screen.blit(exit.imgwin, (0, 0))
             if exitcounter > 60:
-                pygame.event.post(pygame.event.Event(pygame.QUIT))
+                createLevelWalls(johnDoO)
+                johnDoeInGame.x = 100
+                johnDoeInGame.y = 100
+                ghostInGame.x = 100
+                ghostInGame.y = 400
 
         # Inhalt von screen anzeigen.
         pygame.display.flip()
