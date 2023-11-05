@@ -228,7 +228,7 @@ def createLevelWalls(johnDoO):
     x = 0
     xmax = 16
     while x < xmax:
-        if offsetX < 1500:
+        if offsetX < 1350:
             randomY = random.random() * rangeYrandom;
             johnDoO.obstacles[i].start.x = offsetX
             johnDoO.obstacles[i].start.y = 0
@@ -257,7 +257,7 @@ def createLevelWalls(johnDoO):
             i = i + 1
 
             randomX = random.random() * 180;
-            offsetX = offsetX + randomX + 300
+            offsetX = offsetX + randomX + 200
         x = x + 1
 
 def drawLevelWalls(screen, johnDoO):
@@ -314,7 +314,7 @@ def main():
     johnDoeInGame = JohnDoe(johnDoO, "JohnDoe", 100, 100)
     antighost = AntiGhostArray();
     ghostInGame = Ghost(antighost, "TheGhost", 100, 400)
-    exit = Exit(1500,600)
+    exit = Exit(1400,600)
     #exit = Exit(100, 400)
 
     running = 1;
