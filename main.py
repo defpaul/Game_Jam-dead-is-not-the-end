@@ -257,7 +257,7 @@ def createLevelWalls(johnDoO):
             i = i + 1
 
             randomX = random.random() * 180;
-            offsetX = offsetX + randomX + 200
+            offsetX = offsetX + randomX + 300
         x = x + 1
 
 def drawLevelWalls(screen, johnDoO):
